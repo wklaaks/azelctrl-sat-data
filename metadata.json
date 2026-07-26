@@ -1,0 +1,9 @@
+{
+  "generated": "2026-07-26T12:13:31Z",
+  "source_celestrak": "https://celestrak.org/NORAD/elements/gp.php?GROUP=amateur&FORMAT=csv",
+  "source_satnogs": "https://db.satnogs.org/api",
+  "satellite_count": 93,
+  "status_records": 93,
+  "frequency_records": 324,
+  "filter_amateur_bands": false
+}
