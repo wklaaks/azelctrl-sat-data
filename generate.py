@@ -119,6 +119,16 @@ def get_satellite_status(cat_id, name):
     return None
 
 
+import re
+
+def _extract_ctcss_from_description(description):
+    """Extract CTCSS tone from description text (e.g., 'CTCSS 67.0 Hz')."""
+    if not description:
+        return ""
+    match = re.search(r'CTCSS\s+(\d+(?:\.\d+)?)', description, re.IGNORECASE)
+    return match.group(1) if match else ""
+
+
 def get_transmitters(cat_id, name, filter_amateur=False):
     """Get transmitter data from SatNOGS."""
     data = satnogs_get(f"/transmitters/?satellite__norad_cat_id={cat_id}")
@@ -157,6 +167,8 @@ def get_transmitters(cat_id, name, filter_amateur=False):
             "downlink_high_mhz": dl_high_mhz,
             "invert": str(tx.get("invert", False)).lower(),
             "alive": str(tx.get("alive", False)).lower(),
+            "tone": tx.get("tone", "") or _extract_ctcss_from_description(tx.get("description", "")),
+            "wake_tone": tx.get("wake_tone", "") or "",
             "last_updated": tx.get("updated", ""),
         })
     return transmitters
@@ -178,7 +190,7 @@ STATUS_FIELDS = ["norad_cat_id", "name", "status", "last_updated"]
 FREQ_FIELDS = [
     "norad_cat_id", "name", "description", "type", "mode",
     "uplink_mode", "uplink_low_mhz", "uplink_high_mhz",
-    "downlink_low_mhz", "downlink_high_mhz", "invert", "alive", "last_updated"
+    "downlink_low_mhz", "downlink_high_mhz", "invert", "alive", "tone", "wake_tone", "last_updated"
 ]
 
 
